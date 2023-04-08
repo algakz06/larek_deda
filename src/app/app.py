@@ -8,7 +8,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 async def startup():
-    log.info("starting")
+    try:
+        init_db()
+    except Exception as ex:
+        log.exception(f"failed to preparedb {ex}")
+        pass
 
 
 async def shutdown():

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, validator
 from app.core.models import UserType
 
 
@@ -27,14 +27,20 @@ class TokenData(BaseModel):
 
 
 class UserCreateSchema(BaseModel):
-    inn: int = Field(..., ge=1)
+    inn: str = Field(...)
     password: str = Field(...)
     usertype: UserType
+
+    @validator("inn", pre=True)
+    def check_inn(cls, v: str):
+        if 0 < int(v) < 999999999999:
+            return v
+        raise ValueError("Invalid inn")
 
     class Config:
         schema_extra = {
             "example": {
-                "inn": "1232156776521",
+                "inn": 123215677652,
                 "password": "SuperStr0ngPassw0rd",
                 "usertype": 1,
             }

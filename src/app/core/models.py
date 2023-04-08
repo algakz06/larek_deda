@@ -6,9 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, CheckConstraint
 from enum import Enum
 
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from app.core.database import Base
 
 
 class UserType(Enum):

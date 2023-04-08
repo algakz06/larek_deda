@@ -31,7 +31,7 @@ async def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = authenticate_user(db, int(form_data.username), form_data.password)
+    user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
 
         raise HTTPException(

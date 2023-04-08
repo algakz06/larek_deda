@@ -31,7 +31,7 @@ def get_password_hash(password: str) -> str:
     return hashed_password
 
 
-def authenticate_user(db: Session, inn: int, password: str) -> User | bool:
+def authenticate_user(db: Session, inn: str, password: str) -> User | bool:
     """Авторизация пользователя
 
     Авторизация в <service name>

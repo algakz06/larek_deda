@@ -11,9 +11,9 @@ from app.utils.logging import log
 # region User
 
 
-def get_user_by_inn(db: Session, inn: int) -> models.User | None:
+def get_user_by_inn(db: Session, inn: str) -> models.User | None:
 
-    return db.query(models.User).where(models.User.inn == inn).one_or_none()
+    return db.query(models.User).where(models.User.inn == str(inn)).one_or_none()
 
 
 def create_user(db: Session, data: schemas.UserCreateSchema) -> models.User | None:
