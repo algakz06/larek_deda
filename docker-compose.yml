@@ -7,7 +7,7 @@ services:
     env_file:
       - .env
     ports:
-      - "5432:5432"
+      - "46876:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -22,7 +22,7 @@ services:
     depends_on:
       - db
     ports:
-      - "46877:46877"
+      - "46877:8080"
 
   # pgadmin:
   #   image: dpage/pgadmin4
