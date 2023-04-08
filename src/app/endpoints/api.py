@@ -4,6 +4,7 @@ from app.endpoints.users import router as users_router
 from app.endpoints.companies import router as companies_router
 
 router = APIRouter(
+    prefix="/api",
     responses={404: {"description": "Not found"}},
 )
 
