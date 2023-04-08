@@ -6,10 +6,14 @@ services:
     restart: always
     env_file:
       - .env
+    environment:
+      PGDATA: /var/lib/postgresql/data/
     ports:
       - "46876:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ${PWD}/test/termination.csv/:/var/lib/postgresql/data/termination.csv
+      - ${PWD}/test/improper.csv:/var/lib/postgresql/data/improper.csv
 
   backend:
     build:
