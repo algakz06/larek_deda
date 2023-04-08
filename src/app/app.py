@@ -1,3 +1,4 @@
+from fastapi.openapi.utils import get_openapi
 from app.core.settings import settings
 from app.utils.logging import log
 from app.core.database import init_db
@@ -7,10 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 async def startup():
-    try:
-        init_db()
-    except Exception as ex:
-        log.exception(f"failed to preparedb {ex}")
+    log.info("starting")
 
 
 async def shutdown():
@@ -24,7 +22,10 @@ def create_app() -> FastAPI:
     Returns:
         FastAPI:
     """
-    init_db()
+    try:
+        init_db()
+    except Exception as ex:
+        log.exception(f"failed to preparedb {ex}")
     _app = FastAPI()
 
     # region middleware

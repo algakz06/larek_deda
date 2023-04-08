@@ -1,7 +1,9 @@
 from typing import Any, Dict, List, Optional, Union
 from os import path
+from jose import constants
 
 from pydantic import BaseSettings, PostgresDsn, validator
+
 
 class Settings(BaseSettings):
     LOGGING_LEVEL: str
@@ -29,7 +31,7 @@ class Settings(BaseSettings):
             return v
 
         return PostgresDsn.build(
-            scheme="postgresql",
+            scheme="postgresql+psycopg2",
             user=values.get("POSTGRES_USER"),
             password=values.get("POSTGRES_PASSWORD"),
             host=str(values.get("POSTGRES_SERVER"))
@@ -37,6 +39,21 @@ class Settings(BaseSettings):
             else "127.0.0.1",
             path=f"/{values.get('POSTGRES_DB') or ''}",
         )
+
+    SECRET_KEY: str
+
+    ALGORITHM: str = "HS256"
+
+    @validator("ALGORITHM")
+    def check_algorithm(cls, v: str) -> str:
+        if not v in constants.ALGORITHMS.HASHES.keys():
+            help_message = [f"\n-{i}" for i in constants.ALGORITHMS.HASHES.keys()]
+            raise ValueError(f"Unsoported algorithm use one from below: {help_message}")
+        return v
+
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    STATIC_FILE_URL: str = "static/{username}_{filename}"
+    PIPELINE_PATH: str = r"app/pipeline/pipe.zip"
 
     class Config:
         case_sensitive = True

@@ -2,17 +2,18 @@ import time
 from typing import Any
 
 from sqlalchemy import create_engine, Engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.exc import OperationalError as sqlalchemyOpError
 from psycopg2 import OperationalError as psycopg2OpError
 
 from app.utils.logging import log
 from app.core.settings import settings
-from app.core.models import Base
 
 
 engine: Engine
 SessionLocal: Any
+
+Base = declarative_base()
 
 
 def connect_db():
@@ -28,7 +29,6 @@ def connect_db():
 
 def update_db():
     global Base
-    log.info("updating db")
     Base.metadata.create_all(engine)
 
 

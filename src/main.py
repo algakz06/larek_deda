@@ -12,5 +12,5 @@ if __name__ == "__main__":
         reload=True,
         use_colors=True,
         host="0.0.0.0",
-        port=46877,
+        port=8080,
     )
