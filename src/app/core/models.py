@@ -201,7 +201,6 @@ class StaticCodes(Base):
     okogu_code = mapped_column("okogu_code", TEXT, nullable=False)
     okogu_name = mapped_column("okogu_name", TEXT, nullable=False)
 
-
 # endregion
 
 # region ergul
@@ -348,3 +347,23 @@ class BalanceTargetFundUse(Base):
 
 
 # endregion
+
+#region taxes
+class SpecialTaxation(Base):
+    __tablename__ = "special_taxation"
+    id = mapped_column("id", Integer, primary_key=True)
+    inn = mapped_column("inn", VARCHAR(12), ForeignKey("users.inn"))
+    eshn_agricultural_tax = mapped_column("eshn_agricultural_tax", Boolean, nullable=True)
+    usn_simlified_tax_system = mapped_column("usn_simlified_tax_system", Boolean, nullable=True)
+    envd_imputed_tax = mapped_column("envd_imputed_tax", Boolean, nullable=True)
+    srp_product_sharing_agreement_tax = mapped_column("srp_product_sharing_agreement_tax", Boolean, nullable=True)
+
+class EnforcementProceeding(Base):
+    __tablename__ = "enforcement_proceeding"
+    inn = mapped_column("inn", VARCHAR(12), ForeignKey("users.inn"), primary_key=True)
+    enforcement_proceeding_number = mapped_column("enforcement_proceeding_number", TEXT, nullable=True)
+    enforcement_proceeding_date = mapped_column("enforcement_proceeding_date", Date, nullable=True)
+    enforcement_proceeding_subject = mapped_column("enforcement_proceeding_subject", TEXT, nullable=True)
+    amount_due = mapped_column("amount_due", TEXT, nullable=True)
+
+#endregion
