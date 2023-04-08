@@ -1,6 +1,11 @@
 from pydantic import BaseModel, Field, EmailStr, validator
 from app.core.models import UserType
 from datetime import datetime
+import calendar
+import locale
+import random
+
+locale.setlocale(locale.LC_ALL, "ru_RU.UTF-8")
 
 from enum import Enum
 
@@ -79,6 +84,36 @@ class OKVED(BaseModel):
         }
 
 
+def new_cnt() -> int:
+    return random.randint(1000, 5000)
+
+
+class ContractsAmountByMonth(BaseModel):
+    month: str = Field(...)
+    count: int = Field(default_factory=new_cnt)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "month": "Январь",
+                "count": 1204,
+            }
+        }
+
+
+class ArbitrationCase(BaseModel):
+    month: str = Field(...)
+    count: int = Field(default_factory=new_cnt)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "month": "Январь",
+                "count": 1204,
+            }
+        }
+
+
 class CompanySummary(BaseModel):
     name: str = Field(...)
     inn: int = Field(...)
@@ -91,6 +126,8 @@ class CompanySummary(BaseModel):
 
     ceo: str = Field(...)
     okved: list[OKVED] = Field(...)
+    contracts: list[ContractsAmountByMonth] = Field(...)
+    arbitration_cases: list[ArbitrationCase] = Field(...)
 
     class Config:
         schema_extra = {
@@ -104,13 +141,14 @@ class CompanySummary(BaseModel):
                 "tax_authority": 6671,
                 "registration_date": datetime(year=2020, month=9, day=2),
                 "ceo": "Сродных Михаил Юрьевич",
-                "okved": [
-                    {
-                        "type": "J",
-                        "code": "62.01",
-                        "description": "Разработка компьютерного программного обеспечения",
-                        "date": datetime(year=2014, month=2, day=1),
-                    }
+                "okved": [OKVED.Config.schema_extra["example"]],
+                "contracts": [
+                    {"month": name[:3], "count": random.randint(1000, 5000)}
+                    for name in calendar.month_name[1:]
+                ],
+                "arbitration_cases": [
+                    {"month": name[:3], "count": random.randint(0, 5)}
+                    for name in calendar.month_name[1:]
                 ],
             }
         }
