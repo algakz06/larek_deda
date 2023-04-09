@@ -59,6 +59,27 @@ class UserCreateSchema(BaseModel):
 # region Company
 
 
+class Okpd(BaseModel):
+
+    id: str = Field(...)
+
+    section: str = Field(...)
+    section_name: str = Field(...)
+    sub_section: str = Field(...)
+    sub_section_name: str = Field(...)
+    code: str = Field(...)
+    name: str = Field(...)
+    notes: str = Field(...)
+    sub_code_1: str = Field(...)
+    sub_code_2: str = Field(...)
+    sub_code_3: str = Field(...)
+    sub_code_4: str = Field(...)
+
+    class Config:
+        orm_mode = True
+        copy_on_model_validation = "none"
+
+
 class OKVED(BaseModel):
     type: str = Field(..., max_length=1)
     code: str = Field(...)

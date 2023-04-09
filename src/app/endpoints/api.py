@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from app.endpoints.auth import router as auth_router
 from app.endpoints.users import router as users_router
 from app.endpoints.companies import router as companies_router
+from app.endpoints.okpd import router as okpd_router
 
 router = APIRouter(
     prefix="/api",
@@ -11,3 +12,4 @@ router = APIRouter(
 router.include_router(auth_router)
 router.include_router(users_router)
 router.include_router(companies_router)
+router.include_router(okpd_router)

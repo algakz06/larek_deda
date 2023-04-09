@@ -18,25 +18,23 @@ from app.utils.logging import log
 import calendar
 from enum import Enum
 
-# create Enum for months
-
-
-m_index = {index: month for index, month in enumerate(calendar.month_abbr) if month}
-
-
 router = APIRouter(
-    prefix="/companies",
+    prefix="/okpd",
     tags=["companies"],
 )
 
 
-@router.get("/{inn}", response_model=schemas.CompanySummary)
-async def company_info_by_inn(
-    inn: Annotated[int, Path(title="ИНН компании")],
+@router.get("/product/{id}", response_model=list[schemas.Product])
+async def product_entrys(
+    id: Annotated[int, Path(title="id товара/услуги")],
     db: Session = Depends(get_db),
 ):
-    # create dict with months as keys and count of contracts as values
-    summary = crud.get_company_summary(db, str(inn))
-    return summary
+    return [schemas.Product.Config.schema_extra["example"] for i in range(20)]
 
 
+@router.get("/all")
+async def get_product_all(
+    db: Session = Depends(get_db),
+):
+    log.info(crud.get_okpd(db))
+    return []

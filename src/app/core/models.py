@@ -28,13 +28,18 @@ class User(Base):
     user_type = mapped_column("user_type", CHAR(1), nullable=True)
     created_at = mapped_column("created_at", DateTime, default=datetime.utcnow)
 
+
 class Okpd(Base):
     __tablename__ = "okpd"
-    id: Mapped[int] = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
+    id: Mapped[int] = mapped_column(
+        "id", BigInteger, autoincrement=True, primary_key=True
+    )
     section: Mapped[str] = mapped_column("section", CHAR(1), nullable=True)
     section_name: Mapped[str] = mapped_column("section_name", TEXT, nullable=True)
     sub_section: Mapped[str] = mapped_column("sub_section", CHAR(2), nullable=True)
-    sub_section_name: Mapped[str] = mapped_column("sub_section_name", TEXT, nullable=True)
+    sub_section_name: Mapped[str] = mapped_column(
+        "sub_section_name", TEXT, nullable=True
+    )
     code: Mapped[str] = mapped_column("code", TEXT, nullable=True)
     name: Mapped[str] = mapped_column("name", TEXT, nullable=True)
     notes: Mapped[str] = mapped_column("notes", TEXT, nullable=True)
@@ -42,6 +47,10 @@ class Okpd(Base):
     sub_code_2: Mapped[str] = mapped_column("sub_code_2", VARCHAR(4), nullable=True)
     sub_code_3: Mapped[str] = mapped_column("sub_code_3", VARCHAR(4), nullable=True)
     sub_code_4: Mapped[str] = mapped_column("sub_code_4", VARCHAR(4), nullable=True)
+
+    def __repr(self):
+        return f"OKPD {self.id} {self.code} {self.name}"
+
 
 # endregion
 

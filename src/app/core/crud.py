@@ -117,4 +117,11 @@ def get_company_summary(db: Session, inn: str):
     return summary
 
 
+def get_okpd(db: Session) -> list[schemas.OKVED]:
+    okpd = db.query(models.Okpd).all()
+    if not okpd:
+        return []
+    return [schemas.OKVED(**i) for i in okpd]
+
+
 # endregion User
