@@ -39,9 +39,9 @@ class Okpd(Base):
     name: Mapped[str] = mapped_column("name", TEXT, nullable=True)
     notes: Mapped[str] = mapped_column("notes", TEXT, nullable=True)
     sub_code_1: Mapped[str] = mapped_column("sub_code_1", VARCHAR(4), nullable=True)
-    sub_code_2: Mapped[str] = mapped_column("sub_code_1", VARCHAR(4), nullable=True)
-    sub_code_3: Mapped[str] = mapped_column("sub_code_1", VARCHAR(4), nullable=True)
-    sub_code_4: Mapped[str] = mapped_column("sub_code_1", VARCHAR(4), nullable=True)
+    sub_code_2: Mapped[str] = mapped_column("sub_code_2", VARCHAR(4), nullable=True)
+    sub_code_3: Mapped[str] = mapped_column("sub_code_3", VARCHAR(4), nullable=True)
+    sub_code_4: Mapped[str] = mapped_column("sub_code_4", VARCHAR(4), nullable=True)
 
 # endregion
 
