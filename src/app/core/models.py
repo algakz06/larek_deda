@@ -1,6 +1,6 @@
 from typing import Optional, Any
 from datetime import datetime
-from sqlalchemy.types import DateTime, Integer, Date, Boolean, String, Enum as EnumType
+from sqlalchemy.types import DateTime, Integer, Date, Boolean, String, BigInteger
 from sqlalchemy.dialects.postgresql import MONEY, CHAR, VARCHAR, TEXT, ARRAY
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, CheckConstraint
@@ -9,9 +9,9 @@ from enum import Enum
 from app.core.database import Base
 
 
-class UserType(Enum):
-    supplier = 1
-    customer = 2
+# class UserType(Enum):
+#     supplier = 1
+#     customer = 2
 
 
 # region user
@@ -21,15 +21,15 @@ class User(Base):
     organization_name: Mapped[str] = mapped_column("organization_name", TEXT, nullable=True)
     organization_representative: Mapped[str] = mapped_column("organization_representative", TEXT, nullable=True)
     hashed_password: Mapped[str] = mapped_column("hashed_password", TEXT, nullable=True)
-    user_type = mapped_column("user_type", EnumType(UserType), nullable=False)
+    user_type = mapped_column("user_type", CHAR(1), nullable=False)
     created_at = mapped_column("created_at", DateTime, default=datetime.utcnow)
 
 # endregion
 
 # region contract
-class EnforcementType(Enum):
-    cash_account = 1
-    bank_guarantee = 2
+# class EnforcementType(Enum):
+#     cash_account = 1
+#     bank_guarantee = 2
 
 
 class Contract(Base):
@@ -53,15 +53,15 @@ class Contract(Base):
     execution_start_date = mapped_column("execution_start_date", Date, nullable=False)
     execution_end_date = mapped_column("execution_end_date", Date, nullable=False)
     enforcement_type = mapped_column(
-        "enforcement_type", EnumType(EnforcementType), nullable=True
+        "enforcement_type", TEXT, nullable=True
     )
     enforcement_amount_rub = mapped_column(
         "enforcement_amount_rub", MONEY, nullable=True
     )
     supplier_inn = mapped_column(
-        "supplier_inn", VARCHAR(15), ForeignKey("users.inn"), nullable=False
+        "supplier_inn", VARCHAR(15), ForeignKey("users.inn"), nullable=True
     )
-    supplier_kpp = mapped_column("supplier_kpp", VARCHAR(20), nullable=False)
+    supplier_kpp = mapped_column("supplier_kpp", VARCHAR(20), nullable=True)
     okpd2_code = mapped_column("okpd2_code", TEXT, nullable=False)
 
 
@@ -81,8 +81,9 @@ class ContractTermination(Base):
 
 class ContractImproperExecution(Base):
     __tablename__ = "contract_improper_executions"
+    id = mapped_column("id", Integer, autoincrement=True, primary_key=True)
     contract_id = mapped_column(
-        "contract_id", TEXT, ForeignKey("contracts.contract_id"), primary_key=True
+        "contract_id", TEXT, ForeignKey("contracts.contract_id"), nullable=False
     )
     execution_info = mapped_column("execution_info", TEXT, nullable=True)
     execution_document_date = mapped_column(
@@ -102,7 +103,7 @@ class NotificationInfo(Base):
         "procedure_id", TEXT, ForeignKey("contracts.procedure_id"), primary_key=True
     )
     first_publish_day = mapped_column("first_publish_day", Date, nullable=False)
-    etc_code = mapped_column("etc_code", TEXT, nullable=True)
+    etp_code = mapped_column("etp_code", TEXT, nullable=True)
     customer_inn = mapped_column(
         "customer_inn", VARCHAR(12), ForeignKey("users.inn"), nullable=False
     )
@@ -159,15 +160,15 @@ class Rnp(Base):
 # endregion
 
 # region msp
-class OrganizationType(Enum):
-    legal_entity = 1
-    individual_entrepreneur = 2
+# class OrganizationType(Enum):
+#     legal_entity = '1'
+#     individual_entrepreneur = '2'
 
 
-class OrganizationCategory(Enum):
-    micro_enterprise = 1
-    small_enterprise = 2
-    mediumenterprise = 3
+# class OrganizationCategory(Enum):
+#     micro_enterprise = '1'
+#     small_enterprise = '2'
+#     mediumenterprise = '3'
 
 
 class MspRoster(Base):
@@ -175,9 +176,9 @@ class MspRoster(Base):
     inn = mapped_column("inn", VARCHAR(12), ForeignKey("users.inn"), primary_key=True)
     include_date = mapped_column("include_date", Date, nullable=False)
     organization_type = mapped_column(
-        "organization_type", EnumType(OrganizationType), nullable=False
+        "organization_type", CHAR(1), nullable=False
     )
-    organization_category = mapped_column("organization_category", TEXT, nullable=False)
+    organization_category = mapped_column("organization_category", CHAR(1), nullable=False)
 
 
 # endregion
@@ -231,7 +232,7 @@ class EgrulInfo(Base):
 
 class EgrulLicences(Base):
     __tablename__ = "ergul_licences"
-    id = mapped_column("id", Integer, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     inn = mapped_column("inn", VARCHAR(12), ForeignKey("users.inn"), nullable=False)
     license_date = mapped_column("license_date", Date, nullable=False)
     license_start_date = mapped_column("license_start_date", Date, nullable=False)
@@ -254,7 +255,7 @@ class EgripInfo(Base):
 
 class EgripLicences(Base):
     __tablename__ = "egrip_licences"
-    id = mapped_column("id", Integer, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     inn = mapped_column("inn", VARCHAR(12), ForeignKey("users.inn"), nullable=False)
     license_date = mapped_column("license_date", Date, nullable=False)
     license_start_date = mapped_column("license_start_date", Date, nullable=False)
@@ -282,7 +283,7 @@ class BalanceCodeDict(Base):
 
 class BalanceSheet(Base):
     __tablename__ = "balance_sheet"
-    id = mapped_column("id", Integer, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     inn = mapped_column("inn", VARCHAR(12), ForeignKey("users.inn"))
     financial_year = mapped_column("financial_year", Integer)
     str_code = mapped_column("str_code", TEXT, ForeignKey("balance_code_dict.str_code"))
@@ -291,7 +292,7 @@ class BalanceSheet(Base):
 
 class BalanceCapitalChange1(Base):
     __tablename__ = "balance_capital_change_1"
-    id = mapped_column("id", Integer, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     inn = mapped_column("inn", VARCHAR(12), ForeignKey("users.inn"))
     financial_year = mapped_column("financial_year", Integer)
     str_code = mapped_column("str_code", TEXT, ForeignKey("balance_code_dict.str_code"))
@@ -307,9 +308,9 @@ class BalanceCapitalChange1(Base):
 
 class BalanceCapitalChange2(Base):
     __tablename__ = "balance_capital_change_2"
-    id = mapped_column("id", Integer, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     inn = mapped_column("inn", VARCHAR(12), ForeignKey("users.inn"))
-    period_description = mapped_column("perio_description", TEXT, nullable=True)
+    period_description = mapped_column("period_description", TEXT, nullable=True)
     financial_year = mapped_column("financial_year", Integer)
     str_code = mapped_column("str_code", TEXT, ForeignKey("balance_code_dict.str_code"))
     str_value = mapped_column("str_value", TEXT, nullable=True)
@@ -317,7 +318,7 @@ class BalanceCapitalChange2(Base):
 
 class BalanceCapitalChange3(Base):
     __tablename__ = "balance_capital_change_3"
-    id = mapped_column("id", Integer, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     inn = mapped_column("inn", VARCHAR(12), ForeignKey("users.inn"))
     str_code = mapped_column("str_code", TEXT, ForeignKey("balance_code_dict.str_code"))
     str_value = mapped_column("str_value", TEXT, nullable=True)
@@ -325,7 +326,7 @@ class BalanceCapitalChange3(Base):
 
 class BalanceFinancialResults(Base):
     __tablename__ = "balance_financial_results"
-    id = mapped_column("id", Integer, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     inn = mapped_column("inn", VARCHAR(12), ForeignKey("users.inn"))
     str_code = mapped_column("str_code", TEXT, ForeignKey("balance_code_dict.str_code"))
     str_value = mapped_column("str_value", TEXT, nullable=True)
@@ -333,7 +334,7 @@ class BalanceFinancialResults(Base):
 
 class BalanceFundMovement(Base):
     __tablename__ = "balance_fund_movement"
-    id = mapped_column("id", Integer, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     inn = mapped_column("inn", VARCHAR(12), ForeignKey("users.inn"))
     str_code = mapped_column("str_code", TEXT, ForeignKey("balance_code_dict.str_code"))
     str_value = mapped_column("str_value", TEXT, nullable=True)
@@ -341,7 +342,7 @@ class BalanceFundMovement(Base):
 
 class BalanceTargetFundUse(Base):
     __tablename__ = "balance_target_fund_use"
-    id = mapped_column("id", Integer, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     inn = mapped_column("inn", VARCHAR(12), ForeignKey("users.inn"))
     str_code = mapped_column("str_code", TEXT, ForeignKey("balance_code_dict.str_code"))
     str_value = mapped_column("str_value", TEXT, nullable=True)
