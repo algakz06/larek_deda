@@ -37,6 +37,5 @@ async def company_info_by_inn(
 ):
     # create dict with months as keys and count of contracts as values
     summary = crud.get_company_summary(db, str(inn))
+
     return summary
-
-

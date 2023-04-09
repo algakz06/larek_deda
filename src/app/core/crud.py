@@ -49,6 +49,8 @@ def get_company_summary(db: Session, inn: str):
         )
         .all()
     )
+    if not res:
+        return []
     kpp = res[0].customer_kpp
     okpd2_code = set()
     for obj in res:
