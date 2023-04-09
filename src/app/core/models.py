@@ -28,6 +28,20 @@ class User(Base):
     user_type = mapped_column("user_type", CHAR(1), nullable=True)
     created_at = mapped_column("created_at", DateTime, default=datetime.utcnow)
 
+class Okpd(Base):
+    __tablename__ = "okpd"
+    id: Mapped[int] = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
+    section: Mapped[str] = mapped_column("section", CHAR(1), nullable=True)
+    section_name: Mapped[str] = mapped_column("section_name", TEXT, nullable=True)
+    sub_section: Mapped[str] = mapped_column("sub_section", CHAR(2), nullable=True)
+    sub_section_name: Mapped[str] = mapped_column("sub_section_name", TEXT, nullable=True)
+    code: Mapped[str] = mapped_column("code", TEXT, nullable=True)
+    name: Mapped[str] = mapped_column("name", TEXT, nullable=True)
+    notes: Mapped[str] = mapped_column("notes", TEXT, nullable=True)
+    sub_code_1: Mapped[str] = mapped_column("sub_code_1", VARCHAR(4), nullable=True)
+    sub_code_2: Mapped[str] = mapped_column("sub_code_1", VARCHAR(4), nullable=True)
+    sub_code_3: Mapped[str] = mapped_column("sub_code_1", VARCHAR(4), nullable=True)
+    sub_code_4: Mapped[str] = mapped_column("sub_code_1", VARCHAR(4), nullable=True)
 
 # endregion
 
@@ -40,7 +54,7 @@ class EnforcementType(Enum):
 class Contract(Base):
     # procedure_id – идентификатор закупки
     __tablename__ = "contracts"
-    id = mapped_column("id", Integer, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     contract_id = mapped_column("contract_id", VARCHAR(15))
     procedure_id = mapped_column("procedure_id", TEXT)
     customer_inn = mapped_column("customer_inn", VARCHAR(15), nullable=True)
@@ -64,13 +78,10 @@ class Contract(Base):
     supplier_kpp = mapped_column("supplier_kpp", VARCHAR(20), nullable=True)
     okpd2_code = mapped_column("okpd2_code", TEXT, nullable=True)
 
-    def __repr__(self) -> str:
-        return f"Contract(id={self.id}, contract_id={self.contract_id}, procedure_id={self.procedure_id}, customer_inn={self.customer_inn}, customer_kpp={self.customer_kpp}, protocol_date={self.protocol_date}, sign_date={self.sign_date}, min_publish_date={self.min_publish_date}, contract_subject={self.contract_subject}, contract_price_rub={self.contract_price_rub}, advance_sum_percents={self.advance_sum_percents}, subcontractor_sum_percents={self.subcontractor_sum_percents}, execution_start_date={self.execution_start_date}, execution_end_date={self.execution_end_date}, enforcement_type={self.enforcement_type}, enforcement_amount_rub={self.enforcement_amount_rub}, supplier_inn={self.supplier_inn}, supplier_kpp={self.supplier_kpp}, okpd2_code={self.okpd2_code})"
-
 
 class ContractTermination(Base):
     __tablename__ = "contract_terminations"
-    id = mapped_column("id", BigInteger, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     contract_id = mapped_column("contract_id", TEXT, primary_key=True)
     termination_date = mapped_column("termination_date", Date, nullable=True)
     termination_reason_info = mapped_column(
@@ -83,7 +94,7 @@ class ContractTermination(Base):
 
 class ContractImproperExecution(Base):
     __tablename__ = "contract_improper_executions"
-    id = mapped_column("id", Integer, autoincrement=True, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     contract_id = mapped_column("contract_id", TEXT, nullable=True)
     execution_info = mapped_column("execution_info", TEXT, nullable=True)
     execution_document_date = mapped_column(
@@ -99,7 +110,8 @@ class ContractImproperExecution(Base):
 # region notification
 class NotificationInfo(Base):
     __tablename__ = "notification_info"
-    procedure_id = mapped_column("procedure_id", TEXT, primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
+    procedure_id = mapped_column("procedure_id", TEXT)
     first_publish_day = mapped_column("first_publish_day", Date, nullable=True)
     etp_code = mapped_column("etp_code", TEXT, nullable=True)
     customer_inn = mapped_column("customer_inn", VARCHAR(15), nullable=True)
@@ -115,7 +127,8 @@ class NotificationInfo(Base):
 # region complate
 class Complaint(Base):
     __tablename__ = "complaints"
-    complaint_id = mapped_column("complaint_id", CHAR(6), primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
+    complaint_id = mapped_column("complaint_id", CHAR(6))
     procedure_id = mapped_column("procedure_id", TEXT, nullable=True)
     status = mapped_column("status", TEXT, nullable=True)
     processing_result = mapped_column("processing_result", TEXT, nullable=True)
@@ -124,10 +137,11 @@ class Complaint(Base):
 # endregion
 
 # region participation stat
-class ParticipiantStat(Base):
-    __tablename__ = "participiant_stats"
+class ParticipationtStat(Base):
+    __tablename__ = "participation_stats"
     __table_args__ = (CheckConstraint("participiant_count >= wins_count"),)
-    supplier_id = mapped_column("supplier_id", VARCHAR(15), primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
+    supplier_id = mapped_column("supplier_id", VARCHAR(15))
     supplier_kpp = mapped_column("supplier_kpp", VARCHAR(9), nullable=True)
     fz = mapped_column("fz", VARCHAR(5), nullable=True)
     participiant_count = mapped_column("participiant_count", Integer, nullable=True)
@@ -139,7 +153,8 @@ class ParticipiantStat(Base):
 # region rnp
 class Rnp(Base):
     __tablename__ = "rnp"
-    supplier_inn = mapped_column("supplier_inn", VARCHAR(15), primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
+    supplier_inn = mapped_column("supplier_inn", VARCHAR(15))
     supplier_kpp = mapped_column("supplier_kpp", VARCHAR(9), nullable=True)
     supplier_reg_number = mapped_column("supplier_reg_number", TEXT, nullable=True)
     include_reason = mapped_column("include_reason", TEXT, nullable=True)
@@ -174,7 +189,7 @@ class MspRoster(Base):
 # endregion
 
 # region static_codes
-class StaticCodes(Base):
+class StatisticCodes(Base):
     __tablename__ = "static_codes"
     inn = mapped_column("inn", VARCHAR(15), primary_key=True)
     okato_reg_code = mapped_column("okato_reg_code", TEXT, nullable=True)
@@ -197,8 +212,9 @@ class StaticCodes(Base):
 
 # region ergul
 class EgrulInfo(Base):
-    __tablename__ = "ergul_info"
-    inn = mapped_column("inn", VARCHAR(15), primary_key=True)
+    __tablename__ = "egrul_info"
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
+    inn = mapped_column("inn", VARCHAR(15))
     kpp = mapped_column("kpp", VARCHAR(9), nullable=True)
     registration_date = mapped_column("registration_date", Date, nullable=True)
     entity_state_record_date = mapped_column(
@@ -221,7 +237,7 @@ class EgrulInfo(Base):
 
 
 class EgrulLicences(Base):
-    __tablename__ = "ergul_licences"
+    __tablename__ = "egrul_licences"
     id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
     inn = mapped_column("inn", VARCHAR(15), nullable=True)
     license_date = mapped_column("license_date", Date, nullable=True)
@@ -234,7 +250,8 @@ class EgrulLicences(Base):
 # region egrip
 class EgripInfo(Base):
     __tablename__ = "egrip_info"
-    inn = mapped_column("inn", VARCHAR(15), primary_key=True)
+    id = mapped_column("id", BigInteger, autoincrement=True, primary_key=True)
+    inn = mapped_column("inn", VARCHAR(15))
     is_farm_economy = mapped_column("is_farm_economy", Boolean, nullable=True)
     registration_date = mapped_column("registration_date", Date, nullable=True)
     termination_date = mapped_column("termination_date", Date, nullable=True)
