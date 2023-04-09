@@ -64,6 +64,9 @@ class Contract(Base):
     supplier_kpp = mapped_column("supplier_kpp", VARCHAR(20), nullable=True)
     okpd2_code = mapped_column("okpd2_code", TEXT, nullable=True)
 
+    def __repr__(self) -> str:
+        return f"Contract(id={self.id}, contract_id={self.contract_id}, procedure_id={self.procedure_id}, customer_inn={self.customer_inn}, customer_kpp={self.customer_kpp}, protocol_date={self.protocol_date}, sign_date={self.sign_date}, min_publish_date={self.min_publish_date}, contract_subject={self.contract_subject}, contract_price_rub={self.contract_price_rub}, advance_sum_percents={self.advance_sum_percents}, subcontractor_sum_percents={self.subcontractor_sum_percents}, execution_start_date={self.execution_start_date}, execution_end_date={self.execution_end_date}, enforcement_type={self.enforcement_type}, enforcement_amount_rub={self.enforcement_amount_rub}, supplier_inn={self.supplier_inn}, supplier_kpp={self.supplier_kpp}, okpd2_code={self.okpd2_code})"
+
 
 class ContractTermination(Base):
     __tablename__ = "contract_terminations"

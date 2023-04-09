@@ -2,10 +2,9 @@ from pydantic import BaseModel, Field, EmailStr, validator
 from app.core.models import UserType
 from datetime import datetime
 import calendar
-import locale
+
 import random
 
-locale.setlocale(locale.LC_ALL, "ru_RU.UTF-8")
 
 from enum import Enum
 
@@ -126,7 +125,8 @@ class CompanySummary(BaseModel):
 
     ceo: str = Field(...)
     okved: list[OKVED] = Field(...)
-    contracts: list[ContractsAmountByMonth] = Field(...)
+    contracts_customer: list[ContractsAmountByMonth] = Field(...)
+    contracts_supplier: list[ContractsAmountByMonth] = Field(...)
     arbitration_cases: list[ArbitrationCase] = Field(...)
 
     class Config:
@@ -142,7 +142,11 @@ class CompanySummary(BaseModel):
                 "registration_date": datetime(year=2020, month=9, day=2),
                 "ceo": "Сродных Михаил Юрьевич",
                 "okved": [OKVED.Config.schema_extra["example"]],
-                "contracts": [
+                "contracts_customer": [
+                    {"month": name[:3], "count": random.randint(1000, 5000)}
+                    for name in calendar.month_name[1:]
+                ],
+                "contracts_supplier": [
                     {"month": name[:3], "count": random.randint(1000, 5000)}
                     for name in calendar.month_name[1:]
                 ],
