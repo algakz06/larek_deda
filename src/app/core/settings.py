@@ -37,6 +37,7 @@ class Settings(BaseSettings):
             host=str(values.get("POSTGRES_SERVER"))
             if values.get("POSTGRES_SERVER")
             else "127.0.0.1",
+            port="46876",
             path=f"/{values.get('POSTGRES_DB') or ''}",
         )
 

@@ -18,11 +18,16 @@ class UserType(Enum):
 class User(Base):
     __tablename__ = "users"
     inn: Mapped[str] = mapped_column("inn", VARCHAR(12), primary_key=True)
-    organization_name: Mapped[str] = mapped_column("organization_name", TEXT, nullable=True)
-    organization_representative: Mapped[str] = mapped_column("organization_representative", TEXT, nullable=True)
+    organization_name: Mapped[str] = mapped_column(
+        "organization_name", TEXT, nullable=True
+    )
+    organization_representative: Mapped[str] = mapped_column(
+        "organization_representative", TEXT, nullable=True
+    )
     hashed_password: Mapped[str] = mapped_column("hashed_password", TEXT, nullable=True)
     user_type = mapped_column("user_type", EnumType(UserType), nullable=False)
     created_at = mapped_column("created_at", DateTime, default=datetime.utcnow)
+
 
 # endregion
 

@@ -12,8 +12,8 @@ services:
       - "46876:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ${PWD}/test/termination.csv/:/var/lib/postgresql/data/termination.csv
-      - ${PWD}/test/improper.csv:/var/lib/postgresql/data/improper.csv
+      # - ${PWD}/out/:/var/lib/postgresql/data/out
+      # - ${PWD}/test/improper.csv:/var/lib/postgresql/data/improper.csv
 
   backend:
     build:

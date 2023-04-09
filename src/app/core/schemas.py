@@ -154,4 +154,29 @@ class CompanySummary(BaseModel):
         }
 
 
+class Product(BaseModel):
+    name: str = Field(...)
+    region: str = Field(...)
+    tender_id: int = Field(...)
+    tender_date: datetime = Field(...)
+    tender_end_date: datetime = Field(...)
+    sum_in_rub: int = Field(...)
+    company_name: str = Field(...)
+    company_inn: str = Field(...)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Кирпич",
+                "region": "77",
+                "tender_id": 67234409,
+                "tender_date": datetime(year=2019, month=3, day=10),
+                "tender_end_date": datetime(year=2019, month=9, day=21),
+                "sum_in_rub": random.randint(100_000, 1_000_000),
+                "company_name": "ООО Василек",
+                "company_inn": 12778124,
+            }
+        }
+
+
 # endregion Company
