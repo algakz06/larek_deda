@@ -117,11 +117,37 @@ def get_company_summary(db: Session, inn: str):
     return summary
 
 
-def get_okpd(db: Session) -> list[schemas.OKVED]:
-    okpd = db.query(models.Okpd).all()
+def get_okpd(db: Session) -> list[schemas.OkpdSlim]:
+    okpd = db.execute(
+        select(models.Okpd)
+        .filter(models.Okpd.code.regexp_match("^\\d{2}$"))
+        .order_by(models.Okpd.code)
+    ).fetchall()
+
     if not okpd:
         return []
-    return [schemas.OKVED(**i) for i in okpd]
+
+    return [
+        schemas.OkpdSlim(
+            id=i[0].id,
+            section=i[0].section,
+            section_name=i[0].section_name,
+            code=i[0].code,
+            name=i[0].name,
+        )
+        for i in okpd
+    ]
+
+
+def winrate(db: Session, inn: str):
+
+    res = (
+        db.query(models.ParticipationtStat)
+        .filter(models.ParticipationtStat.supplier_id == inn)
+        .all()
+    )
+    log.info(res)
+    return []
 
 
 # endregion User

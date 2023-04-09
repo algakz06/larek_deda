@@ -32,9 +32,8 @@ async def product_entrys(
     return [schemas.Product.Config.schema_extra["example"] for i in range(20)]
 
 
-@router.get("/all")
+@router.get("/all", response_model=list[schemas.OkpdSlim])
 async def get_product_all(
     db: Session = Depends(get_db),
 ):
-    log.info(crud.get_okpd(db))
-    return []
+    return crud.get_okpd(db)

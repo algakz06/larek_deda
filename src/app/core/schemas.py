@@ -64,20 +64,28 @@ class Okpd(BaseModel):
     id: str = Field(...)
 
     section: str = Field(...)
-    section_name: str = Field(...)
-    sub_section: str = Field(...)
-    sub_section_name: str = Field(...)
+    section_name: str | None = Field(...)
+    sub_section: str | None = Field(...)
+    sub_section_name: str | None = Field(...)
     code: str = Field(...)
     name: str = Field(...)
-    notes: str = Field(...)
+    notes: str | None = Field(...)
     sub_code_1: str = Field(...)
-    sub_code_2: str = Field(...)
-    sub_code_3: str = Field(...)
-    sub_code_4: str = Field(...)
+    sub_code_2: str | None = Field(...)
+    sub_code_3: str | None = Field(...)
+    sub_code_4: str | None = Field(...)
 
     class Config:
         orm_mode = True
         copy_on_model_validation = "none"
+
+
+class OkpdSlim(BaseModel):
+    id: int = Field(...)
+    section: str | None = Field(...)
+    section_name: str | None = Field(...)
+    code: str | None = Field(...)
+    name: str | None = Field(...)
 
 
 class OKVED(BaseModel):
